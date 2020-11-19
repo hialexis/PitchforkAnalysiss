@@ -1,32 +1,35 @@
 import sqlite3
 from sqlite3 import Error
+import pandas as pd
 
-def create_connection(db_file):
-    conn = None
+def create_connection(dbfile):
+    c = None
     try:
-        conn = sqlite3.connect(db_file)
-    except Error as e:
+        c = sqlite3.connect(dbfile)
+    except error as e:
         print(e)
-    return conn
+    return c
 
 
-def select_all_tasks(conn):
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM artists")
+def select_query(c, sqlfile):
+    cur = c.cursor()
+    fd = open(sqlfile, 'r')
+    sqlFile = fd.read()
+    fd.close()
+
+    cur.execute(sqlFile)
 
     rows = cur.fetchall()
 
+    data =[]
     for row in rows:
-        print(row)
+        data.append((row))
+    return data
 
-
-def main():
+def run_query(sqlfile):
     database = r"C:/Users/18184/Documents/database.sqlite/database.sqlite"
 
-    conn = create_connection(database)
-    with conn:
-        select_all_tasks(conn)
-
-
-if __name__ == '__main__':
-    main()
+    c = create_connection(database)
+    with c:
+        dataset = select_query(c, sqlfile) 
+    return dataset
