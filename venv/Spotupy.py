@@ -16,15 +16,18 @@ def run_credentials():
     return sp
 
 
-def retrieve_album_id(album, artist):
-    sp = run_credentials()
+def retrieve_album_id(album, artist,sp):
     results = sp.search(q="album:" + album, type="album", limit=1)
-    album_id = results['albums']['items'][0]['uri']
+
+    if bool(results['albums']['items']) == True:
+        album_id = results['albums']['items'][0]['uri']
+    else:
+        album_id = np.nan
+
     return album_id
 
 
-def retireve_track_names(album_id):
-    sp = run_credentials()
+def retireve_track_names(album_id, sp):
     track_names = []
     tracks = sp.album_tracks(album_id)
     for track in tracks['items']:
@@ -32,9 +35,8 @@ def retireve_track_names(album_id):
     return track_names
 
 
-def retrieve_track_ids(artist_name, track_names):
+def retrieve_track_ids(artist_name, track_names, sp):
     tracks_ids = []
-    sp = run_credentials()
     for i in range(0, len(track_names)):
         result = sp.search(q="artist:" + artist_name + " track:" + track_names[i], limit=1)
 
@@ -48,8 +50,7 @@ def retrieve_track_ids(artist_name, track_names):
     return tracks_ids
 
 
-def retrieve_audio_features(track_names, tracks_ids):
-    sp = run_credentials()
+def retrieve_audio_features(track_names, tracks_ids, sp):
     column_names = ["acousticness",
                     "danceability",
                     "duration_ms",
