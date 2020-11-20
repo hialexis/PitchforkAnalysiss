@@ -1,5 +1,4 @@
 import json
-
 import numpy as np
 import pandas as pd
 import spotipy
@@ -43,7 +42,7 @@ def retrieve_track_ids(artist_name, track_names):
             song_id = result['tracks']['items'][0]['uri']
         else:
             song_id = np.nan
-
+            
     tracks_ids.append(song_id)
 
     return tracks_ids
@@ -76,5 +75,5 @@ def retrieve_audio_features(track_names, tracks_ids):
         avg_data = avg_data.append(datframe[0], ignore_index=True)
     else:
         avg_data = pd.DataFrame(columns=column_names)
-        print(avg_data)
+        avg_data.loc[len(avg_data)] = 0
     return avg_data
